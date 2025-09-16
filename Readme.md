@@ -44,3 +44,12 @@ Some popular tools are:
   - **Node.js, Python, Java** (language support)  
 
 > Example: If your project uses Git, you can install the **Git plugin** to connect Jenkins with your repository.
+
+## Plugins used: 
+
+* pipeline stage view 
+* pipeline utility steps
+* aws credential Allows storing Amazon IAM credentials within the Jenkins Credentials API. 
+* Pipeline: AWS Steps This plugins adds Jenkins pipeline steps to interact with the AWS API.
+* AnsiColorVersion Adds ANSI coloring to the Console Output
+* Rebuilder This plugin is for rebuilding a job using the same parameters.
