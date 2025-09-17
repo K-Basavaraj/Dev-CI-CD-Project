@@ -6,7 +6,7 @@ terraform {
     }
   }
   backend "s3" {
-    bucket         = "infra-cicd-dev-s3"
+    bucket         = "infracicd-dev-s3"
     key            = "vpc-dev"
     region         = "us-east-1"
     dynamodb_table = "infra-dev-locking"
