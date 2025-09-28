@@ -57,9 +57,9 @@ pipeline {
                             'infra-cicd/20-sg',
                             'infra-cicd/10-vpc'
                         ]
-                        for (dir in directories) {
-                            echo "Destroying resources in directory: ${dir}"
-                            dir("${dir}") {
+                        for (subdir in directories) {
+                            echo "Destroying resources in directory: ${subdir}"
+                            dir("${subdir}") {
                                 sh """
                                     terraform init -reconfigure
                                     terraform destroy -auto-approve || { echo "Failed to destroy resources in ${dir}"; exit 1; }
