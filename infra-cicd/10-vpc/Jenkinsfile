@@ -8,10 +8,10 @@ pipeline {
         ansiColor('xterm')
     }
     parameters {
-        choice(name: 'ACTION', choices: ['apply', 'destroy'], description: 'select action')
+        choice(name: 'ACTION', choices: ['apply', 'destroy'], description: 'Select Action')
     }
     stages {
-        stage('Init'){
+        stage('Init and Plan') {
             steps {
                 withAWS(region: 'us-east-1', credentials: 'aws-creds') {
                     dir('infra-cicd/10-vpc') {
@@ -20,7 +20,7 @@ pipeline {
                         terraform plan -out=tfplan
                       '''
                     } 
-                 }
+                }
             }
         }
         stage('Apply and Destroy') {
@@ -35,9 +35,9 @@ pipeline {
                         then
                          terraform destroy --auto-approve
                         fi
-                     """
+                    """
                   }
-               }
+                }
             }
         }
         stage('Trigger SG') {

@@ -1,0 +1,88 @@
+pipeline {
+    agent {
+        label 'AGENT-1'
+    }
+
+    opetions {
+        timeout(time: 30, unit: 'MINUTES')
+        disableConcurrentBuilds()
+        ansiColor('xterm')
+    }
+    parameters {
+        choice(name: 'ACTION', choices: ['apply', 'destroy'], 'Select Action')
+    }
+    stages{
+        stage('Init and Plan'){
+            steps {
+                withAWS(region: 'us-east-1', credentials: 'aws-creds'){
+                    directory('infra-cicd/90-cdn'){
+                        sh """
+                         terraform init -reconfigure
+                         terraform plan -out=tfplan
+                        """
+                    }
+                }
+            }
+        }
+        stage('Apply and Destroy'){
+           steps {
+              withAWS(region: 'us-east-1', credentials: 'aws-creds'){
+                   directory('infra-cicd/90-cdn') {
+                        sh """
+                            if [ ${params.ACTION} == 'apply' ]
+                            then 
+                                terraform apply --auto-approve tfplan
+                            fi
+                        """
+                    }
+                }
+            }
+        }
+        stage('Destroy') {
+            when {
+                expression { params.ACTION == 'destroy' }
+            }
+            steps {
+                withAWS(region: 'us-east-1', credentials: 'aws-creds') {
+                    script {
+                         // Full paths inside infra-cicd
+                        def directories = [
+                            'infra-cicd/90-cdn',
+                            'infra-cicd/80-alb',
+                            'infra-cicd/70-ecr',
+                            'infra-cicd/60-acm',
+                            'infra-cicd/50-eks',
+                            'infra-cicd/40-rds',
+                            'infra-cicd/30-bastion',
+                            'infra-cicd/20-sg',
+                            'infra-cicd/10-vpc'
+                        ]
+                        for (dir in directories) {
+                            echo "Destroying resources in directory: ${dir}"
+                            dir("${dir}") {
+                                sh """
+                                    terraform init -reconfigure
+                                    terraform destroy -auto-approve || { echo "Failed to destroy resources in ${dir}"; exit 1; }
+                                """
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    post {
+        always {
+            echo 'This section always runs!'
+            deleteDir() //in jenkins this function will delete the workspace directory of the job on the agent (VM/container)
+        }
+        success {
+            echo 'This section runs when pipeline sucess'
+        }
+        failure {
+            echo 'This section runs when pipeline failed' 
+        }
+    }
+}
