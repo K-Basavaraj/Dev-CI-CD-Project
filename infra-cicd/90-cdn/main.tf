@@ -77,6 +77,7 @@ resource "aws_cloudfront_distribution" "expense_cdn" {
 
 module "records" {
   source  = "terraform-aws-modules/route53/aws//modules/records"
+  version = "5.0.0"
   zone_name = var.zone_name
   records = [
     {

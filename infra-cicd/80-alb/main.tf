@@ -10,7 +10,7 @@ module "ingres_alb" {
     var.common_tags,
     var.ingress_alb_tags
   )
-   enable_deletion_protection = false
+  enable_deletion_protection = false
 }
 
 
@@ -38,7 +38,7 @@ resource "aws_lb_listener" "https" {
   certificate_arn   = local.https_certificate_arn
 
   default_action {
-    type             = "fixed-response"
+    type = "fixed-response"
     fixed_response {
       content_type = "text/html"
       message_body = "<h1>Hello, I am from web ALB HTTPS</h1>"
@@ -48,13 +48,14 @@ resource "aws_lb_listener" "https" {
 }
 
 module "records" {
-  source  = "terraform-aws-modules/route53/aws//modules/records"
+  source    = "terraform-aws-modules/route53/aws//modules/records"
+  version   = "5.0.0"
   zone_name = var.zone_name
   records = [
     {
-      name    = "expense-${var.environment}"
-      type    = "A"
-      alias   = {
+      name = "expense-${var.environment}"
+      type = "A"
+      alias = {
         name    = module.ingres_alb.dns_name
         zone_id = module.ingres_alb.zone_id
       }
@@ -65,10 +66,10 @@ module "records" {
 
 
 resource "aws_lb_target_group" "expense_tg" {
-  name     = local.resource_name
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = local.vpc_id
+  name        = local.resource_name
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = local.vpc_id
   target_type = "ip"
   health_check {
     healthy_threshold   = 2 #if contineously two request sucess means its healthy
