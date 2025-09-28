@@ -3,13 +3,13 @@ pipeline {
         label 'AGENT-1'
     }
 
-    opetions {
+    options {
         timeout(time: 30, unit: 'MINUTES')
         disableConcurrentBuilds()
         ansiColor('xterm')
     }
     parameters {
-        choice(name: 'ACTION', choices: ['apply', 'destroy'], 'Select Action')
+        choice(name: 'ACTION', choices: ['apply', 'destroy'], description: 'Select Action')
     }
     stages{
         stage('Init and Plan'){
