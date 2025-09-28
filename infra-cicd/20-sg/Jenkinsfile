@@ -1,6 +1,6 @@
 pipeline {
    agent {
-      lable 'AGENT-1'
+      label 'AGENT-1'
    }
    options {
       timeout(time: 30, unit: 'MINUTES') //timeout
@@ -56,7 +56,7 @@ pipeline {
          when {
            expression { params.ACTION == 'apply' }
         }
-        Parallel {
+        parallel {
             stage('Bastion') {
               steps {
                  build job: 'infra-cicd/30-bastion', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
@@ -85,7 +85,7 @@ pipeline {
 
       stage('Sequential') {
          when {
-            expression { param.ACTION == 'apply'}
+            expression { params.ACTION == 'apply'}
          }
          stages {
             stage('ACM') {
