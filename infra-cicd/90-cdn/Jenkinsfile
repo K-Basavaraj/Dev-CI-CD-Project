@@ -58,12 +58,12 @@ pipeline {
                             'infra-cicd/10-vpc'
                         ]
                         // Reverse order to destroy dependencies safely
-                        directories.each { dir ->
-                           echo "Destroying resources in directory: ${dir}"
-                           dir("${dir}") {
+                        directories.each {  subdir ->
+                           echo "Destroying resources in directory: ${subdir}"
+                           dir(subdir) {
                                 sh """
                                     terraform init -reconfigure
-                                    terraform destroy -auto-approve || { echo "Failed to destroy resources in ${dir}"; exit 1; }
+                                    terraform destroy -auto-approve || { echo "Failed to destroy resources in ${subdir}"; exit 1; }
                                 """
                             }
                         }
