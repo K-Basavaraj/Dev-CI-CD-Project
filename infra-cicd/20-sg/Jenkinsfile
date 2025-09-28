@@ -59,25 +59,25 @@ pipeline {
         parallel {
             stage('Bastion') {
               steps {
-                 build job: 'infra-cicd/30-bastion', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
+                 build job: '30-bastion', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
               }
             }
             
             stage('RDS') {
               steps {
-                 build job: 'infra-cicd/40-rds', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
+                 build job: '40-rds', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
               }
             }
 
             stage('EKS') {
               steps {
-                 build job: 'infra-cicd/50-eks', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
+                 build job: '50-eks', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
               }
             }
 
             stage('ECR') {
               steps {
-                 build job: 'infra-cicd/70-ecr', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
+                 build job: '70-ecr', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
               }
             }
          }
@@ -90,19 +90,19 @@ pipeline {
          stages {
             stage('ACM') {
                steps {
-                  build job: 'infra-cicd/60-acm', parameters: [string(name: 'ACTION', value: 'apply')]
+                  build job: '60-acm', parameters: [string(name: 'ACTION', value: 'apply')]
                }
             }
 
             stage('ALB') {
                steps {
-                  build job: 'infra-cicd/80-alb', parameters: [string(name: 'ACTION', value: 'apply')],  wait: false
+                  build job: '80-alb', parameters: [string(name: 'ACTION', value: 'apply')],  wait: false
                }
             }
 
             stage('CDN') {
                steps {
-                  build job: 'infra-cicd/90-cdn', parameters: [string(name: 'ACTION', value: 'apply')],  wait: false
+                  build job: '90-cdn', parameters: [string(name: 'ACTION', value: 'apply')],  wait: false
                }
             }
          }
