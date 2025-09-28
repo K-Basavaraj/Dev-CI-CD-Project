@@ -15,7 +15,7 @@ pipeline {
     stage('Init and Plan') {
       steps {
         withAWS(region: 'us-east-1', credentials: 'aws-creds') {
-          directory('infra-cicd/60-acm'){
+          dir('infra-cicd/60-acm'){
             sh """
               terraform init -reconfigure
               terraform plan -out=tfplan
@@ -27,7 +27,7 @@ pipeline {
     stage('Apply and Destroy') {
       steps {
         withAWS(region: 'us-east-1', credentials: 'aws-creds') {
-          directory('infra-cicd/60-acm') {
+          dir('infra-cicd/60-acm') {
             sh """
               if [ ${params.ACTION} == 'apply' ]
               then 
