@@ -67,15 +67,6 @@ pipeline {
                                 """
                             }
                         }
-                        // for (subdir in directories) {
-                        //     echo "Destroying resources in directory: ${subdir}"
-                        //     dir("${subdir}") {
-                        //         sh """
-                        //             terraform init -reconfigure
-                        //             terraform destroy -auto-approve || { echo "Failed to destroy resources in ${dir}"; exit 1; }
-                        //         """
-                        //     }
-                        // }
                     }
                 }
             }
