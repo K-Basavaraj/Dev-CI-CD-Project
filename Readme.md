@@ -1,49 +1,42 @@
-# CI/CD: Continuous Integration and Continuous Deployment/Development
+## 🧱 Infrastructure Setup Overview
 
-## 1. What is Continuous Integration (CI)?
-
-Continuous Integration (CI) is the practice of frequently merging code changes from developers into a shared repository.  
-The main purpose of CI is to **automate the integration process** and catch issues early.
-
-When code is integrated, the CI pipeline typically performs these steps:
-
-- **Install dependencies**  
-- **Run tests** (e.g., unit tests)  
-- **Build the application / generate artifacts** (used later for deployment or as input to other stages)  
-- **Scan code quality** (bugs, vulnerabilities, style issues)  
-- **Detect build issues early**  
-
-This process reduces manual effort, improves efficiency, and ensures that errors are identified quickly.
-
-### Benefits of CI
-- Early bug detection  
-- Faster feedback loops for developers  
-- Reduced manual tasks  
-- Reliable and consistent builds  
-
-### Tools used for CI
-Some popular tools are:  
-- **Jenkins**  
-- **GitHub Actions**  
-- **Azure DevOps**  
-- **GitLab CI/CD**  
-- **Bitbucket Pipelines**  
-
+The below diagram represents the **EXPENSE-DEV-INFRA-CI/CD** setup configured through **Jenkins** using **Terraform**.
+![alt text](infra-cicd.drawio.svg)
 ---
+### Dependency Flow
 
-## 2. Jenkins Overview
+- **10-VPC** is the **upstream** for **20-SG (Security Group)**.  
+- **20-SG** acts as the common upstream for:
+  - **30-Bastion**
+  - **40-RDS**
+  - **50-EKS**
+  - **70-ECR**
+  - **60-ACM**
+- **60-ACM** serves as the upstream for:
+  - **80-ALB**
+  - **90-CDN**
 
-**Jenkins** is one of the most popular CI servers.  
+This ensures resources are deployed in the correct order while allowing independent components to run concurrently.
+---
+### Pipeline Logic Summary
 
-- It is a lightweight **web server**.  
-- By default, Jenkins is minimal, but it can be extended using **plugins**.  
-- Plugins allow Jenkins to integrate with other tools like:  
-  - **Git** (version control)  
-  - **Bitbucket**  
-  - **SonarQube** (code quality)  
-  - **Node.js, Python, Java** (language support)  
+- The Jenkins pipeline begins by provisioning the **VPC** and **Security Group**.
+- After SG creation:
+  - The following jobs execute **in parallel** since they are independent:  
+    - **Bastion**  
+    - **RDS**  
+    - **EKS**  
+    - **ECR**
+  - Once the parallel stage completes, the following jobs run **sequentially**:  
+    - **ACM** → **ALB** → **CDN**
+- The pipeline supports both **apply** and **destroy** actions via the `ACTION` parameter.
+- A **timeout** and **concurrent build lock** are used to ensure stability.
+- **Color-coded console logs** improve pipeline readability.
 
-> Example: If your project uses Git, you can install the **Git plugin** to connect Jenkins with your repository.
+- Built-in features include:
+  - **Timeout control** (30 minutes)
+  - **Disable concurrent builds**
+  - **ANSI colorized output**
 
 ## Plugins used: 
 
@@ -53,3 +46,13 @@ Some popular tools are:
 * Pipeline: AWS Steps This plugins adds Jenkins pipeline steps to interact with the AWS API.
 * AnsiColorVersion Adds ANSI coloring to the Console Output
 * Rebuilder This plugin is for rebuilding a job using the same parameters.
+---
+### Key Highlights
+
+-  **Parallel execution** reduces build time by provisioning independent resources simultaneously.  
+-  **Sequential stages** maintain dependency order for ACM → ALB → CDN.  
+-  **Post actions** ensure cleanup and consistent logging after every pipeline run.  
+-  **Parameter-driven workflow** allows easy switching between environment creation and destruction.
+
+---
+> This setup ensures efficient, modular, and dependency-aware infrastructure provisioning for the EXPENSE-DEV environment.
