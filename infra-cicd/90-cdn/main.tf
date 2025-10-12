@@ -1,6 +1,6 @@
 resource "aws_cloudfront_distribution" "expense_cdn" {
   origin {
-    domain_name = "${var.project_name}-${var.environment}.${var.zone_name}" #expense-dev-basavadevops81s.online
+    domain_name = "${var.project_name}-${var.environment}.${var.zone_name}" #expense-dev.awsdevopsjourney.online
     origin_id   = "${var.project_name}-${var.environment}.${var.zone_name}"
 
     custom_origin_config {
