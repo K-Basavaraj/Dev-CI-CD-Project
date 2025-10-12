@@ -31,7 +31,7 @@ resource "aws_cloudfront_distribution" "expense_cdn" {
     path_pattern           = "/images/*" #we are allowing this images cache this
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
-    target_origin_id       = "${var.project_name}-${var.environment}-${var.zone_name}"
+    target_origin_id       = "${var.project_name}-${var.environment}.${var.zone_name}"
     min_ttl                = 0
     default_ttl            = 86400
     max_ttl                = 31536000
@@ -45,7 +45,7 @@ resource "aws_cloudfront_distribution" "expense_cdn" {
     path_pattern           = "/static/*"
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = "${var.project_name}-${var.environment}-${var.zone_name}"
+    target_origin_id       = "${var.project_name}-${var.environment}.${var.zone_name}"
     min_ttl                = 0
     default_ttl            = 3600
     max_ttl                = 86400
