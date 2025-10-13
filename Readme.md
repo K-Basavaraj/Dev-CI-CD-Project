@@ -166,9 +166,9 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
   --set serviceAccount.name=aws-load-balancer-controller
 ```
 * Make sure load balancer pods are running
-
 ```
 kubectl get pods -n kube-system
+```
 NAME                                            READY   STATUS    RESTARTS   AGE
 aws-load-balancer-controller-689495d45f-mwmg6   1/1     Running   0          8s
 aws-load-balancer-controller-689495d45f-v78wh   1/1     Running   0          8s
