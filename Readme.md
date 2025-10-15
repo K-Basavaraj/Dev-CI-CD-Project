@@ -159,13 +159,13 @@ We installed the **AWS Load Balancer Controller** through Helm to enable Kuberne
 ```
 helm repo add eks https://aws.github.io/eks-charts
 ```
+* Make sure load balancer pods are running
+```
 helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
   -n kube-system \
   --set clusterName=expense-dev \
   --set serviceAccount.create=true \
   --set serviceAccount.name=aws-load-balancer-controller
-```
-* Make sure load balancer pods are running
 ```
 kubectl get pods -n kube-system
 ```
