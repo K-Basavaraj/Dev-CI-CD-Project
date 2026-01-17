@@ -64,6 +64,17 @@ This ensures resources are deployed in the correct order while allowing independ
 -  **Parameter-driven workflow** allows easy switching between environment creation and destruction.
 
 ---
+## Jenkins Bootstrap
+
+Jenkins (master and agent) is provisioned separately using Terraform
+under the `Jenkinsconfig` folder.
+
+This bootstrap layer:
+- Creates Jenkins master and agent EC2 instances
+- Installs required tools on the agent (Terraform, Docker, Helm, Node, Maven)
+- Exposes Jenkins via Route53
+- Acts as the entry point for infra CI/CD pipelines
+---
 > This setup ensures efficient, modular, and dependency-aware infrastructure provisioning for the EXPENSE-DEV environment.
 
 * Make sure infra is created. 
@@ -107,6 +118,8 @@ We are using bastion as our EKS client, so it will have
 ```
 
 ## Ingress Controller
+The AWS Load Balancer Controller dynamically creates and manages.
+ALB resources and TargetGroupBindings for Kubernetes services.
 
 * Login to bastion host and get the kubeconfig of EKS cluster
 ```
