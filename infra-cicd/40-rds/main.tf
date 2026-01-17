@@ -11,8 +11,10 @@ module "db" {
   db_name                     = "transactions"
   username                    = "root"
   manage_master_user_password = false
-  password                    = "ExpenseApp1"
-  port                        = "3306"
+  password_wo                 = "ExpenseApp1"
+  password_wo_version         = 1
+  # password                    = "ExpenseApp1"
+  port = "3306"
 
   vpc_security_group_ids = [local.mysql_sg_id]
   skip_final_snapshot    = true
@@ -73,9 +75,9 @@ module "records" {
   #zone_id = data.aws_route53_zone.selected.zone_id
   records = [
     {
-      name    = "mysql-${var.environment}" # mysql-dev
-      type    = "CNAME"
-      ttl     = 1
+      name = "mysql-${var.environment}" # mysql-dev
+      type = "CNAME"
+      ttl  = 1
       records = [
         module.db.db_instance_address #RDS endpoint URL to point this DNS record to
       ]
