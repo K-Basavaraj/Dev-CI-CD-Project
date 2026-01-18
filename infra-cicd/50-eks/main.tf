@@ -8,11 +8,13 @@ resource "aws_key_pair" "eks" {
 }
 
 module "eks" {
-  source  = "terraform-aws-modules/eks/aws"
-  version = "~> 20.31"
+  source                    = "terraform-aws-modules/eks/aws"
+  version                   = "~> 20.31"
+  create_kms_key            = false
+  cluster_encryption_config = {}
 
   cluster_name                   = "${var.project_name}-${var.environment}"
-  cluster_version                = "1.32"
+  cluster_version                = "1.31"
   cluster_endpoint_public_access = true #if it is false we need to access this through vpn
   cluster_addons = {
     coredns                = {}
@@ -48,9 +50,9 @@ module "eks" {
     #   key_name = aws_key_pair.eks.key_name
     # }
     green = {
-      min_size     = 2
-      max_size     = 10
-      desired_size = 2
+      min_size      = 2
+      max_size      = 10
+      desired_size  = 2
       capacity_type = "SPOT"
       iam_role_additional_policies = {
         AmazonEBSCSIDriverPolicy          = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
