@@ -94,7 +94,8 @@ We are using bastion as our EKS client, so it will have
 
 ## LogintoBastion
 ```
- mysql -h expense-dev.czn6yzxlcsiv.us-east-1.rds.amazonaws.com -u root -pExpenseApp1
+mysql -h expense-dev.cwbaca8aea37.us-east-1.rds.amazonaws.com -P 3306 -u root -p'<Enter_DB_Password>' --ssl-verify-server-cert  --ssl-ca=/certs/global-bundle.pem transactions
+ mysql -h expense-dev.cwbaca8aea37.us-east-1.rds.amazonaws.com -u root -pExpenseApp1
 ```
 ```
  USE transactions;
@@ -194,3 +195,5 @@ eks-pod-identity-agent-cj98g                    1/1     Running   0          5m1
 kube-proxy-7sgw7                                1/1     Running   0          6m4s
 kube-proxy-8zb7z                                1/1     Running   0          6m5s
 ```
+
+kubectl config set-context --current --namespace=expense
